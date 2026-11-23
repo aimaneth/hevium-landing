@@ -48,10 +48,17 @@ export function HeroScene() {
     listen('focusin', launch(true));
     listen('focusout', launch(false));
 
-    const able =
-      !matchMedia('(prefers-reduced-motion: reduce)').matches &&
-      // a software renderer would hold the page up for seconds at a time, so it counts as no WebGL
-      document.createElement('canvas').getContext('webgl2', { failIfMajorPerformanceCaveat: true }) !== null;
+    const canWebGL2 = () => {
+      const testCanvas = document.createElement('canvas');
+      const gl =
+        testCanvas.getContext('webgl2', { failIfMajorPerformanceCaveat: true }) ||
+        (matchMedia(`(max-width: ${HERO_DRAG_BREAKPOINT - 1}px)`).matches ? testCanvas.getContext('webgl2') : null);
+      if (!gl) return false;
+      const debug = gl.getExtension('WEBGL_debug_renderer_info');
+      const renderer = debug ? String(gl.getParameter(debug.UNMASKED_RENDERER_WEBGL)) : '';
+      return !/swiftshader|llvmpipe|software|basic render/i.test(renderer);
+    };
+    const able = !matchMedia('(prefers-reduced-motion: reduce)').matches && canWebGL2();
     let late: ReturnType<typeof setTimeout> | undefined;
     let rafId = 0;
     let idleId = 0;

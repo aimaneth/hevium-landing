@@ -81,7 +81,9 @@ export async function mountHeroScene(canvas, { reducedMotion = false, dragMinWid
   const camera = new THREE.PerspectiveCamera(26, 1, 0.1, 100);
 
   // a soft glow round anything bright; tone mapping moves to the last pass
-  const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }));
+  const isMobileInit = window.innerWidth < dragMinWidth;
+  const targetType = renderer.extensions.get('EXT_color_buffer_float') ? THREE.HalfFloatType : THREE.UnsignedByteType;
+  const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: targetType, samples: isMobileInit ? 2 : 4 }));
   composer.addPass(new RenderPass(scene, camera));
   composer.addPass(new UnrealBloomPass(new THREE.Vector2(1, 1), 0.14, 0.35, 0.6)); // strength, radius, threshold
   composer.addPass(new OutputPass());
@@ -94,7 +96,7 @@ export async function mountHeroScene(canvas, { reducedMotion = false, dragMinWid
   // The glass reflects a live cube map of the scene, so lit logos show up in it. Layer 1 holds
   // lights that only that cube map sees: the room strips, and a panel over the cube that
   // brightens while the pointer is on the call to action.
-  const cubeTarget = new THREE.WebGLCubeRenderTarget(128, { type: THREE.HalfFloatType });
+  const cubeTarget = new THREE.WebGLCubeRenderTarget(128, { type: targetType });
   const cubeCamera = new THREE.CubeCamera(0.1, 60, cubeTarget);
   cubeCamera.position.set(0, CUBE / 2, CUBE_Z);
   cubeCamera.layers.enable(1);
