@@ -19,7 +19,7 @@ const CORRIDOR = 0.36; // logos live between invisible walls at z = ±CORRIDOR, 
 const STEP = 1 / 60;
 // The most pixels the scene will draw. Past this the multisampled buffers outgrow a laptop GPU's
 // memory: at 3840 x 2678 an RTX 3060 fell from 6ms a frame to 130ms. 6 million is 1.5x at 1920 wide.
-const MAX_PIXELS = 6e6;
+const MAX_PIXELS = 3.5e6;
 // The cube's front face sits level with the front of the corridor. Any further forward and it would
 // cover the logos beside it, and three's glass does not show other glass through it.
 const CUBE_Z = CORRIDOR - CUBE / 2;
@@ -59,14 +59,21 @@ export async function mountHeroScene(canvas, { reducedMotion = false, onProgress
   // Draw at 1.5x at least: on an ordinary 1x screen that is what keeps the thin bright rims smooth.
   // Measured free on an RTX 3060 at 1920 wide. Slower machines fall back to 1, see the frame loop,
   // and resize keeps the total under MAX_PIXELS.
-  let sharpness = THREE.MathUtils.clamp(devicePixelRatio, 1.5, 2);
+  let sharpness = Math.min(devicePixelRatio || 1, 1.5);
   renderer.toneMapping = THREE.NeutralToneMapping; // keeps the brand mint from washing out to white
   canvas.style.touchAction = 'pan-y'; // touch scrolls the page; dragging is for mouse and pen
   renderer.setClearColor(0x000000, 0); // what a view with no backdrop clears to; the floor's mirror image is one
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('#07080B');
-  scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new THREE.Scene().add(createRoomStrips()), 0.01).texture;
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const envRoom = new THREE.Scene().add(createRoomStrips());
+  scene.environment = pmrem.fromScene(envRoom, 0.01).texture;
+  envRoom.traverse((o) => {
+    o.geometry?.dispose();
+    o.material?.dispose?.();
+  });
+  pmrem.dispose();
   scene.environmentIntensity = 3; // enough for unlit logos to show as edge highlights, like the reference
   const camera = new THREE.PerspectiveCamera(26, 1, 0.1, 100);
 
@@ -84,7 +91,7 @@ export async function mountHeroScene(canvas, { reducedMotion = false, onProgress
   // The glass reflects a live cube map of the scene, so lit logos show up in it. Layer 1 holds
   // lights that only that cube map sees: the room strips, and a panel over the cube that
   // brightens while the pointer is on the call to action.
-  const cubeTarget = new THREE.WebGLCubeRenderTarget(256, { type: THREE.HalfFloatType });
+  const cubeTarget = new THREE.WebGLCubeRenderTarget(128, { type: THREE.HalfFloatType });
   const cubeCamera = new THREE.CubeCamera(0.1, 60, cubeTarget);
   cubeCamera.position.set(0, CUBE / 2, CUBE_Z);
   cubeCamera.layers.enable(1);
@@ -175,8 +182,8 @@ export async function mountHeroScene(canvas, { reducedMotion = false, onProgress
       mesh.updateMatrixWorld();
     }
   };
-  // let the pile come to rest before the first frame (20s of simulated time at most)
-  for (let i = 0; i < 1200 && (i < 120 || logos.some((l) => !l.body.isSleeping())); i++) world.step();
+  // let the pile come to rest before the first frame (fast pre-settle cap)
+  for (let i = 0; i < 400 && (i < 60 || logos.some((l) => !l.body.isSleeping())); i++) world.step();
   sync();
 
   // --- hover and drag -----------------------------------------------------------------------
@@ -245,14 +252,14 @@ export async function mountHeroScene(canvas, { reducedMotion = false, onProgress
   let breath = 0, breathClock = 0; // how far into the hover state the cube is, and time spent there
   let last = performance.now(), behind = 0, frameMs = 0;
   let redraw = true, stillFrames = 0, drawnAt = 0, frames = 0; // see the pacing in the loop
+  let disposed = false;
   let onScreen = true; // nothing runs while the hero is scrolled out of view
-  const watching = new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; });
-  watching.observe(canvas);
+  let hidden = typeof document !== 'undefined' && document.hidden;
   let slowTime = 0; // seconds of slow frames, see the loop
-  renderer.setAnimationLoop((now) => {
+  const renderFrame = (now) => {
+    if (disposed || !onScreen || hidden) return;
     const elapsed = (now - last) / 1000;
     last = now;
-    if (!onScreen) return;
     frameMs += (elapsed * 1000 - frameMs) * 0.05;
     behind = Math.min(behind + elapsed, 0.1);
     while (behind >= STEP) {
@@ -346,7 +353,26 @@ export async function mountHeroScene(canvas, { reducedMotion = false, onProgress
     } else floor.point();
     floor.update(camera, renderer);
     composer.render();
+  };
+  const syncLoop = () => {
+    if (disposed) return;
+    if (onScreen && !hidden) {
+      last = performance.now();
+      renderer.setAnimationLoop(renderFrame);
+    } else {
+      renderer.setAnimationLoop(null);
+    }
+  };
+  const watching = new IntersectionObserver(([entry]) => {
+    onScreen = entry.isIntersecting;
+    syncLoop();
   });
+  watching.observe(canvas);
+  document.addEventListener('visibilitychange', () => {
+    hidden = document.hidden;
+    syncLoop();
+  }, { signal: listening.signal });
+  syncLoop();
 
   const resize = () => {
     const w = canvas.clientWidth, h = canvas.clientHeight;
@@ -374,6 +400,7 @@ export async function mountHeroScene(canvas, { reducedMotion = false, onProgress
 
   return {
     dispose() {
+      disposed = true;
       renderer.setAnimationLoop(null);
       listening.abort();
       watching.disconnect();

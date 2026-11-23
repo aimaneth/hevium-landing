@@ -27,7 +27,7 @@ test.describe('final call to action', () => {
     const cta = section.getByRole('link', { name: 'Launch app' });
     await expect(cta).toHaveClass(/\bbtn-primary\b/);
     const url = new URL((await cta.getAttribute('href'))!);
-    expect(url.origin).toBe('https://hevium.xyz');
+    expect(url.origin).toBe('https://app.hevium.xyz');
     expect(url.searchParams.get('utm_content')).toBe('final');
     expect((await cta.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     await expect(section.getByRole('link')).toHaveCount(1);
@@ -53,7 +53,7 @@ test.describe('final call to action', () => {
       await expect(page.locator('#final [data-coins]').first()).toHaveAttribute('aria-hidden', 'true');
       await expect(coins(page)).toHaveCount(12);
       const srcs = await coins(page).evaluateAll((imgs) => imgs.map((img) => img.getAttribute('src')!));
-      for (const src of srcs) expect(src).toMatch(/^https:\/\/hevium\.xyz\/(chains|tokens)\//);
+      for (const src of srcs) expect(src).toMatch(/^\/(chains|tokens)\//);
       expect(srcs.filter((src) => src.includes('/chains/')).length).toBe(5); // all five chains
       expect(new Set(srcs).size).toBe(12);
       const words = await Promise.all(['[data-mark]', 'h2', 'header .lead', '[data-actions]'].map(async (part) => (await page.locator(`#final ${part}`).boundingBox())!));

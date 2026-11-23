@@ -35,7 +35,7 @@ function Coins({ side }: { side: number }) {
     <div className={styles.coins} data-coins aria-hidden="true">
       {SIDES[side].map(([src, x, y, size, strength], n) => (
         // eslint-disable-next-line @next/next/no-img-element -- the app's own logo, served by the app
-        <img key={src} src={src} alt="" width={88} height={88} loading="lazy" style={{ '--x': x, '--y': y, '--s': `${size}rem`, '--o': strength, '--n': side * 6 + n } as CSSProperties} />
+        <img key={src} src={src} alt="" width={88} height={88} loading="lazy" decoding="async" style={{ '--x': x, '--y': y, '--s': `${size}rem`, '--o': strength, '--n': side * 6 + n } as CSSProperties} />
       ))}
     </div>
   );

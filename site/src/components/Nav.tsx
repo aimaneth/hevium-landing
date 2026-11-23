@@ -187,7 +187,7 @@ export function Nav() {
       <nav className={styles.nav} ref={navRef} aria-label="Main">
         <a className={styles.logo} href="#top" aria-label="Hevium, back to top" onClick={shut}>
           {/* eslint-disable-next-line @next/next/no-img-element -- a static export: images are plain <img> */}
-          <img src={asset('/brand/hevium-logo-dark.svg')} alt="" width={132} height={36} />
+          <img src={asset('/brand/hevium-logo-dark.svg')} alt="" width={132} height={36} decoding="sync" />
         </a>
 
         <ul className={styles.links} id="nav-links" popover="auto" ref={links}>

@@ -11,9 +11,9 @@ export const SHARE_IMAGE = { url: `${HOME}og.png`, width: 1200, height: 630, alt
 export const STRUCTURED = {
   '@context': 'https://schema.org',
   '@graph': [
-    { '@type': 'Organization', '@id': `${SITE.app}#organization`, name: SITE.name, url: SITE.app, logo: `${HOME}icon.svg`, sameAs: [SITE.x] },
-    { '@type': 'WebSite', '@id': `${HOME}#website`, name: SITE.name, url: HOME, publisher: { '@id': `${SITE.app}#organization` } },
-    { '@type': 'WebPage', '@id': `${HOME}#page`, url: HOME, name: META.title, description: META.description, inLanguage: 'en', isPartOf: { '@id': `${HOME}#website` }, about: { '@id': `${SITE.app}#organization` } },
+    { '@type': 'Organization', '@id': `${HOME}#organization`, name: SITE.name, url: HOME, logo: `${HOME}icon.svg`, sameAs: [SITE.x] },
+    { '@type': 'WebSite', '@id': `${HOME}#website`, name: SITE.name, url: HOME, publisher: { '@id': `${HOME}#organization` } },
+    { '@type': 'WebPage', '@id': `${HOME}#page`, url: HOME, name: META.title, description: META.description, inLanguage: 'en', isPartOf: { '@id': `${HOME}#website` }, about: { '@id': `${HOME}#organization` } },
     {
       '@type': 'FAQPage',
       '@id': `${HOME}#faq`,
@@ -42,6 +42,7 @@ export const LLMS_TXT = [
   ...FAQ.flatMap((item) => [`### ${item.q}`, '', item.a, '']),
   '## Links',
   '',
+  `- [Website](${HOME})`,
   `- [App](${SITE.app})`,
   `- [Docs](${SITE.docs})`,
   `- [MCP server](${SITE.mcp})`,

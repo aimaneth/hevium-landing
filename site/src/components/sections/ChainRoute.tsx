@@ -27,7 +27,7 @@ export function ChainRoute() {
 
   useEffect(() => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const timer = setInterval(() => held.current || setActive((now) => (now + 1) % CHAINS.length), TURN);
+    const timer = setInterval(() => (!held.current && !document.hidden) && setActive((now) => (now + 1) % CHAINS.length), TURN);
     return () => clearInterval(timer);
   }, []);
 
@@ -65,7 +65,7 @@ export function ChainRoute() {
           >
             <span className={styles.at}>
               {/* eslint-disable-next-line @next/next/no-img-element -- the app's own logo, served by the app */}
-              <img className={styles.logo} data-logo src={CHAIN_LOGOS[i].src} alt="" width={44} height={44} loading="lazy" />
+              <img className={styles.logo} data-logo src={CHAIN_LOGOS[i].src} alt="" width={44} height={44} loading="lazy" decoding="async" />
               <span className="trade-tag" data-side="buy" aria-hidden="true">
                 B
               </span>
@@ -83,7 +83,7 @@ export function ChainRoute() {
               {chain.trades.map((ticker) => (
                 <span key={ticker} data-token>
                   {/* eslint-disable-next-line @next/next/no-img-element -- the app's own icon, served by the app */}
-                  <img src={tickerLogo(ticker)} alt="" width={20} height={20} loading="lazy" />
+                  <img src={tickerLogo(ticker)} alt="" width={20} height={20} loading="lazy" decoding="async" />
                   {ticker}
                 </span>
               ))}

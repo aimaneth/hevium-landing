@@ -100,7 +100,7 @@ export function HeroScene() {
   return (
     <div className={styles.art} ref={art} data-hero-art>
       {/* eslint-disable-next-line @next/next/no-img-element -- a static export: images are plain <img> */}
-      <img className={styles.poster} src={asset('/brand/hevium-mark-mint.svg')} alt="" width={512} height={512} />
+      <img className={styles.poster} src={asset('/brand/hevium-mark-mint.svg')} alt="" width={512} height={512} fetchPriority="high" decoding="sync" />
       <canvas className={styles.canvas} ref={canvas} aria-hidden="true" />
     </div>
   );
