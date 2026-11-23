@@ -13,6 +13,7 @@ export const SITE = {
   mcp: 'https://mcp.hevium.xyz/',
   brand: 'https://app.hevium.xyz/brand/',
   x: 'https://x.com/heviumxyz',
+  threads: 'https://www.threads.com/@hevium.xyz',
   refParam: 'ref',
   appPaths: { app: '', launch: 'launch', terminal: 'terminal', callouts: 'feed', affiliate: 'invite' },
   legal: { terms: '', privacy: '' }, // open: an empty address means the footer leaves the link out

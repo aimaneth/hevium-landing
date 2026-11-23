@@ -23,6 +23,7 @@ test.describe('footer', () => {
       ['Docs', 'https://docs.hevium.xyz/'],
       ['MCP server', 'https://mcp.hevium.xyz/'],
       ['X (@heviumxyz)', 'https://x.com/heviumxyz'],
+      ['Threads (@hevium.xyz)', 'https://www.threads.com/@hevium.xyz'],
       ['Brand kit', 'https://app.hevium.xyz/brand/'],
     ]) {
       const link = footer.getByRole('link', { name: label });

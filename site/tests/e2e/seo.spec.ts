@@ -56,7 +56,7 @@ test.describe('search and answer engines', () => {
     await page.goto('/');
     const blocks = await page.locator('script[type="application/ld+json"]').evaluateAll((scripts) => scripts.flatMap((script) => JSON.parse(script.textContent!)['@graph'] ?? JSON.parse(script.textContent!)));
     const of = (type: string) => blocks.find((block: { '@type': string }) => block['@type'] === type);
-    expect(of('Organization')).toMatchObject({ name: 'Hevium', url: HOME, sameAs: ['https://x.com/heviumxyz'] });
+    expect(of('Organization')).toMatchObject({ name: 'Hevium', url: HOME, sameAs: ['https://x.com/heviumxyz', 'https://www.threads.com/@hevium.xyz'] });
     expect(of('Organization').logo).toMatch(/^https:\/\/hevium\.xyz\/.+\.(png|svg)$/);
     expect(of('WebSite')).toMatchObject({ name: 'Hevium', url: HOME });
     expect(of('WebPage')).toMatchObject({ url: HOME, name: TITLE });
