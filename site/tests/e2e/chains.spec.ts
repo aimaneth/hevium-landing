@@ -202,7 +202,7 @@ test.describe('five chains section', () => {
     const cta = page.locator('#chains').getByRole('link', { name: 'Start trading' });
     const url = new URL((await cta.getAttribute('href'))!);
     expect(url.origin).toBe('https://app.hevium.xyz');
-    expect(url.searchParams.get('utm_content')).toBe('chains');
+    await expect(cta).toHaveAttribute('data-placement', 'chains');
     await expect(cta).toHaveClass(/\bbtn\b/);
     expect((await cta.boundingBox())!.height).toBeGreaterThanOrEqual(44);
   });
@@ -216,7 +216,7 @@ test.describe('five chains section', () => {
     await expect(page.locator('#chains [data-steps] li [data-step]')).toHaveText(['Sign in', 'Pick a chain', 'Trade']);
     expect(await lit(page)).toEqual([]); // nothing is dimmed, because nothing takes turns
     for (const logo of await rows(page).locator('img[data-logo]').all()) await expect(logo).toHaveCSS('opacity', '1');
-    await expect(page.locator('#chains').getByRole('link', { name: 'Start trading' })).toHaveAttribute('href', /utm_content=chains/);
+    await expect(page.locator('#chains').getByRole('link', { name: 'Start trading' })).toHaveAttribute('href', 'https://app.hevium.xyz/');
     await context.close();
   });
 });

@@ -234,8 +234,8 @@ test.describe('earn section', () => {
     expect((await cta.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     const url = new URL((await cta.getAttribute('href'))!);
     expect(url.origin).toBe('https://app.hevium.xyz');
-    expect(url.searchParams.get('utm_source')).toBe('landing');
-    expect(url.searchParams.get('utm_content')).toBe('earn');
+    expect(url.pathname).toBe('/invite');
+    await expect(cta).toHaveAttribute('data-placement', 'earn');
   });
 
   test('is where the nav bar\'s Earn link leads', async ({ page }) => {
@@ -273,7 +273,7 @@ test.describe('earn section', () => {
     await expect(page.locator('#earn [data-split]')).toContainText('0.20% you');
     // the field and the buttons need the script, so without it they are out of sight and out of reach
     for (const control of await page.locator('#earn input, #earn button').all()) await expect(control).toBeHidden();
-    await expect(page.locator('#earn').getByRole('link', { name: 'Become an affiliate' })).toHaveAttribute('href', /utm_content=earn/);
+    await expect(page.locator('#earn').getByRole('link', { name: 'Become an affiliate' })).toHaveAttribute('href', 'https://app.hevium.xyz/invite');
     await context.close();
   });
 });

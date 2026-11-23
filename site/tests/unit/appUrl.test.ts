@@ -3,23 +3,18 @@ import { appUrl, readRef } from '@/lib/appUrl';
 
 const q = (u: string) => new URL(u).searchParams;
 
-test('utm tags', () => {
+test('clean app url without utm tags', () => {
   const u = appUrl('app', { placement: 'hero' });
-  expect(u.startsWith('https://app.hevium.xyz/?')).toBe(true);
-  expect([q(u).get('utm_source'), q(u).get('utm_medium'), q(u).get('utm_campaign'), q(u).get('utm_content')]).toEqual([
-    'landing',
-    'cta',
-    'home',
-    'hero',
-  ]);
+  expect(u).toBe('https://app.hevium.xyz/');
+  expect(q(u).has('utm_source')).toBe(false);
   expect(q(u).has('ref')).toBe(false);
 });
 
 test('deep links target app.hevium.xyz paths', () => {
-  expect(appUrl('launch', { placement: 'launch' }).startsWith('https://app.hevium.xyz/launch?')).toBe(true);
-  expect(appUrl('terminal', { placement: 'stocks' }).startsWith('https://app.hevium.xyz/terminal?')).toBe(true);
-  expect(appUrl('callouts').startsWith('https://app.hevium.xyz/feed?')).toBe(true);
-  expect(appUrl('affiliate', { placement: 'earn' }).startsWith('https://app.hevium.xyz/invite?')).toBe(true);
+  expect(appUrl('launch', { placement: 'launch' })).toBe('https://app.hevium.xyz/launch');
+  expect(appUrl('terminal', { placement: 'stocks' })).toBe('https://app.hevium.xyz/terminal');
+  expect(appUrl('callouts')).toBe('https://app.hevium.xyz/feed');
+  expect(appUrl('affiliate', { placement: 'earn' })).toBe('https://app.hevium.xyz/invite');
 });
 
 test('referral code is carried', () => expect(q(appUrl('app', { ref: 'dean_01' })).get('ref')).toBe('dean_01'));

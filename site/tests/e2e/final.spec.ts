@@ -28,7 +28,7 @@ test.describe('final call to action', () => {
     await expect(cta).toHaveClass(/\bbtn-primary\b/);
     const url = new URL((await cta.getAttribute('href'))!);
     expect(url.origin).toBe('https://app.hevium.xyz');
-    expect(url.searchParams.get('utm_content')).toBe('final');
+    await expect(cta).toHaveAttribute('data-placement', 'final');
     expect((await cta.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     await expect(section.getByRole('link')).toHaveCount(1);
   });
@@ -100,7 +100,7 @@ test.describe('final call to action', () => {
     const page = await context.newPage();
     await page.goto('/');
     await expect(page.locator('#final h2')).toBeVisible();
-    await expect(page.locator('#final').getByRole('link', { name: 'Launch app' })).toHaveAttribute('href', /utm_content=final/);
+    await expect(page.locator('#final').getByRole('link', { name: 'Launch app' })).toHaveAttribute('href', 'https://app.hevium.xyz/');
     await context.close();
   });
 });
