@@ -1,0 +1,281 @@
+/* Hevium design tokens.
+   Three layers: primitive -> semantic -> component.
+   Components read semantic or component tokens only, never a primitive or a raw value.
+   Brand values come from hevium-brand-kit/BRAND_GUIDELINES.md, checked against
+   hevium.xyz/brand and the app at hevium.xyz on 2026-11-21.
+
+   One theme: Obsidian (dark). */
+
+:root {
+  /* ============ 1. PRIMITIVES ============ */
+
+  /* Brand */
+  --mint-200: #B4FDED;
+  --mint-300: #97FBE3; /* Hevium Mint */
+  --teal-400: #1CD8B3; /* Deep Teal */
+
+  /* Neutrals. Surfaces are the brand kit's Obsidian and Carbon. Text greys are the app's. */
+  --n-950: #07080B; /* Obsidian */
+  --n-900: #0E1117; /* Carbon Surface */
+  --n-850: #141922;
+  --n-800: #1B212C;
+  --n-700: #2A3240;
+  --n-600: #3D4757;
+  --n-500: #71717A; /* the app's muted text. 4.1 to 1 on Obsidian, so disabled text only here */
+  --n-400: #8B8B95; /* the same grey lifted to 5.9 to 1, for small labels */
+  --n-300: #A1A1AA; /* the app's secondary text */
+  --n-200: #D4D4D8;
+  --white: #FFFFFF;
+
+  /* Signals, as the app sets them */
+  --emerald-400: #34D399;
+  --rose-400: #FF637E;
+  --amber-400: #FFB900;
+
+  /* --font-jetbrains and --font-jakarta are set by the site's self-hosted fonts. The preview page has no such variable and falls back to the family name. */
+  --font-mono: var(--font-jetbrains, "JetBrains Mono"), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-fallback: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Space, 4px base */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+  --space-40: 10rem;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Time and easing */
+  --dur-press: 120ms;
+  --dur-fast: 160ms;
+  --dur-base: 220ms;
+  --dur-slow: 400ms;
+  --dur-reveal: 700ms;
+  --stagger: 60ms;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* ============ 2. SEMANTIC ============ */
+
+  /* Colour roles are set in the theme blocks below. */
+
+  /* Type sizes, fluid from a 360px viewport to 1600px */
+  --text-display-xl: clamp(2.75rem, 1.661rem + 4.839vw, 6.5rem); /* 44 -> 104 */
+  --text-display-lg: clamp(2.125rem, 1.436rem + 3.065vw, 4.5rem); /* 34 -> 72 */
+  --text-display-md: clamp(1.75rem, 1.387rem + 1.613vw, 3rem); /* 28 -> 48 */
+  --text-title: clamp(1.25rem, 1.105rem + 0.645vw, 1.75rem); /* 20 -> 28 */
+  --text-body-lg: clamp(1.0625rem, 0.99rem + 0.323vw, 1.3125rem); /* 17 -> 21 */
+  --text-body: clamp(1rem, 0.982rem + 0.081vw, 1.0625rem); /* 16 -> 17 */
+  --text-small: 0.875rem; /* 14 */
+  --text-caption: 0.8125rem; /* 13 */
+  --text-eyebrow: 0.75rem; /* 12 */
+  --text-stat: clamp(2.5rem, 1.629rem + 3.871vw, 5.5rem); /* 40 -> 88 */
+
+  --leading-display-xl: 1.04;
+  --leading-display-lg: 1.08;
+  --leading-display-md: 1.15;
+  --leading-title: 1.25;
+  --leading-body: 1.6;
+  --leading-body-lg: 1.5;
+  --leading-tight: 1.1;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --tracking-title: -0.01em;
+  --tracking-eyebrow: 0.14em;
+
+  /* Type: Plus Jakarta Sans for everything set in words, as in the app and the brand kit.
+     JetBrains Mono for labels and data. Weights and tracking follow hevium.xyz/brand. */
+  --font-display: var(--font-jakarta, "Plus Jakarta Sans"), var(--font-fallback);
+  --font-sans: var(--font-jakarta, "Plus Jakarta Sans"), var(--font-fallback);
+  --weight-display: 700;
+  --weight-display-strong: 800;
+  --tracking-display-xl: -0.035em;
+  --tracking-display-lg: -0.03em;
+  --tracking-display-md: -0.025em;
+
+  /* Layout */
+  --container-max: 100rem; /* 1600px */
+  --gutter: clamp(1rem, 4vw, 4rem);
+  --section-y: clamp(4.5rem, 10vw, 10rem);
+  /* A section that is one screen: its content starts clear of the floating nav bar and ends just above the fold. */
+  --screen-top: 5.5rem;
+  --screen-bottom: 1.5rem;
+  --grid-gap: clamp(1rem, 2vw, 2rem);
+  --measure: 68ch;
+
+  /* Motion roles */
+  --motion-press: var(--dur-press) var(--ease-out);
+  --motion-hover: var(--dur-fast) ease;
+  --motion-ui: var(--dur-base) var(--ease-out);
+  --motion-panel: var(--dur-slow) var(--ease-out);
+  --motion-reveal: var(--dur-reveal) var(--ease-out);
+  --press-scale: 0.97;
+  --reveal-distance: 12px;
+
+  /* Layers */
+  --z-scene: 0;
+  --z-content: 1;
+  --z-cta-bar: 90;
+  --z-nav: 100;
+  --z-loader: 1000;
+
+  /* ============ 3. COMPONENT ============ */
+
+  /* Focus */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 3px;
+  --focus-ring-color: var(--color-focus);
+
+  /* Button */
+  --button-height: 3rem;
+  --button-height-sm: 2.5rem;
+  --button-pad-x: var(--space-6);
+  --button-radius: var(--radius-md);
+  --button-secondary-border: var(--color-border-strong);
+  --button-secondary-bg-hover: var(--color-surface-hover);
+  --button-secondary-text: var(--color-text);
+  --button-weight: var(--weight-bold);
+  /* Tonal: tinted fill, accent text, hairline edge. Measured from the app's active tab. */
+  --button-tonal-bg: var(--color-accent-tint);
+  --button-tonal-bg-hover: var(--color-accent-tint-strong);
+  --button-tonal-border: var(--color-border);
+  --button-tonal-text: var(--color-accent-text);
+
+  /* Hero */
+  --hero-title-size: clamp(2rem, 1.2rem + 3vw, 3.75rem); /* 32 -> 60. Smaller than display-xl: the scene needs the room */
+
+  /* Statement (What is Hevium): lit as it is scrolled through */
+  --statement-unlit: color-mix(in srgb, var(--color-text) 20%, transparent); /* words not read yet */
+  --statement-figure-dim: 0.3; /* a figure before its words are read */
+
+  /* Nav */
+  --nav-height: 3.5rem;
+  --nav-bg: var(--color-surface-glass);
+  --nav-border: var(--color-border);
+  --nav-inset: calc((var(--nav-height) - var(--button-height-sm)) / 2); /* the room around the bar's button */
+  --nav-radius: calc(var(--button-radius) + var(--nav-inset)); /* so the bar's corner runs with the button's */
+  --nav-link: var(--color-text-secondary);
+  --nav-link-hover: var(--color-text);
+
+  /* Eyebrow and section header */
+  --eyebrow-color: var(--color-accent-text);
+  --heading-highlight: var(--color-accent);
+
+  /* Card and callout */
+  /* A dark well inside a thicker frame. The shape is measured from the cards of OriginKit's features-04
+     section; the colours are ours: a Carbon frame round an Obsidian well, each with a hairline. */
+  --card-frame-bg: var(--color-surface);
+  --card-edge: var(--color-border);
+  --card-edge-hover: var(--color-accent-tint-strong);
+  --card-frame-width: 0.5rem;
+  --card-frame-radius: 1.25rem;
+  --card-bg: var(--color-bg);
+  --card-radius: var(--radius-lg);
+  --card-pad: 0.75rem 1.25rem 1.25rem;
+  --card-gap: 0.625rem;
+  --card-title-size: 1.25rem;
+  --card-stat-size: 1.125rem;
+  /* The page's pixels: four-point stars on a grid (lib/pixels.ts). */
+  --pixel-ink: var(--color-accent);
+  --line-drawn: 2px; /* a line that is part of a drawing: a price line, a lane. Rules and edges stay 1px */
+  /* The Hevium star as a mask: give the box a background and it shows through the star (see .eyebrow).
+     The path is the mark's own, from hevium-brand-kit/01-logomark. */
+  --mark-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-77 -52.5 154 105'%3E%3Cpath d='M 24 -52.5 C 13.93 -36.78 -6.86 -25.5 -9 -6.5 C -7.36 -1.09 3.27 -0.77 9 -3.5 C 34.23 -15.52 54.85 -34.92 77 -52.5 C 66.44 -36.98 45.8 -25.2 44 -10.5 C 43.2 -4.8 48.2 -2.9 53.5 -2.1 C 61.5 -0.9 69.2 -0.35 77 0 C 59.09 1.69 40.82 1.17 26 9.5 C 7.63 19.83 -7.73 37.21 -24 52.5 C -13.93 36.78 6.86 25.5 9 6.5 C 7.36 1.09 -3.27 0.77 -9 3.5 C -34.23 15.52 -54.85 34.92 -77 52.5 C -66.44 36.98 -45.8 25.2 -44 10.5 C -43.2 4.8 -48.2 2.9 -53.5 2.1 C -61.5 0.9 -69.2 0.35 -77 0 C -59.09 -1.69 -40.82 -1.17 -26 -9.5 C -7.63 -19.83 7.73 -37.21 24 -52.5 Z'/%3E%3C/svg%3E");
+  /* The same star in outline over a faint fill, as a picture: the brand kit's banners set it large and
+     cropped behind their words. A picture cannot read the tokens, so the two brand colours are written out. */
+  --mark-star-line: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-78 -53.5 156 107'%3E%3Cpath d='M 24 -52.5 C 13.93 -36.78 -6.86 -25.5 -9 -6.5 C -7.36 -1.09 3.27 -0.77 9 -3.5 C 34.23 -15.52 54.85 -34.92 77 -52.5 C 66.44 -36.98 45.8 -25.2 44 -10.5 C 43.2 -4.8 48.2 -2.9 53.5 -2.1 C 61.5 -0.9 69.2 -0.35 77 0 C 59.09 1.69 40.82 1.17 26 9.5 C 7.63 19.83 -7.73 37.21 -24 52.5 C -13.93 36.78 6.86 25.5 9 6.5 C 7.36 1.09 -3.27 0.77 -9 3.5 C -34.23 15.52 -54.85 34.92 -77 52.5 C -66.44 36.98 -45.8 25.2 -44 10.5 C -43.2 4.8 -48.2 2.9 -53.5 2.1 C -61.5 0.9 -69.2 0.35 -77 0 C -59.09 -1.69 -40.82 -1.17 -26 -9.5 C -7.63 -19.83 7.73 -37.21 24 -52.5 Z' fill='%231CD8B3' fill-opacity='0.07' stroke='%2397FBE3' stroke-opacity='0.3' stroke-width='0.6' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --callout-bg: var(--color-surface);
+  --callout-rule: var(--color-accent);
+
+  /* Stat */
+  --stat-value: var(--color-text);
+  --stat-value-accent: var(--color-accent);
+  --stat-label: var(--color-text-muted);
+
+  /* Chip and ticker */
+  --chip-bg: var(--color-surface);
+  --chip-border: var(--color-border-strong);
+  --chip-text: var(--color-text);
+  --ticker-dim: var(--color-text-disabled);
+
+  /* Table */
+  --table-head: var(--color-text-muted);
+  --table-row-border: var(--color-border);
+
+  /* Bar (fairness split) */
+  --bar-fill: var(--gradient-brand);
+  --bar-height: 0.75rem;
+
+  /* Scene overlay */
+  --grain-opacity: 0.06;
+
+  /* ascii-reveal (loading and reveal). These are the package's own property names. */
+  --ascii-accent: var(--color-accent);
+  --ascii-flash: var(--color-accent);
+  --ascii-glyph: var(--color-text-muted);
+  --ascii-skeleton: var(--color-text-muted);
+  --ascii-font: var(--font-mono);
+  --ascii-surface: var(--color-bg);
+}
+
+/* ============ THEMES ============
+   Colour follows 60-30-10:
+     60  canvas                    --color-bg
+     30  surfaces and structure    --color-surface*, borders, secondary text
+     10  accent                    --color-accent*, for the primary action, one highlighted
+                                   phrase per headline, and current state */
+
+/* Obsidian: the page. */
+:root {
+  --color-bg: var(--n-950);
+  --color-surface: var(--n-900);
+  --color-surface-raised: var(--n-850);
+  --color-surface-hover: var(--n-800);
+  --color-surface-glass: rgb(14 17 23 / 0.72);
+  --color-border: rgb(255 255 255 / 0.08);
+  --color-border-strong: rgb(255 255 255 / 0.16);
+  --color-text: var(--white);
+  --color-text-secondary: var(--n-300);
+  --color-text-muted: var(--n-400);
+  --color-text-disabled: var(--n-500);
+  --color-accent: var(--mint-300);
+  --color-accent-hover: var(--mint-200);
+  --color-accent-deep: var(--teal-400);
+  --color-accent-text: var(--mint-300); /* accent used as small text */
+  --color-on-accent: var(--n-950);
+  --color-accent-soft: rgb(151 251 227 / 0.1);
+  --color-accent-tint: rgb(151 251 227 / 0.15);
+  --color-accent-tint-strong: rgb(151 251 227 / 0.2);
+  --gradient-brand: linear-gradient(135deg, var(--mint-300) 0%, var(--teal-400) 100%);
+  --glow-accent: 0 0 24px rgb(151 251 227 / 0.35);
+  --color-up: var(--emerald-400);
+  --color-down: var(--rose-400);
+  --color-warning: var(--amber-400);
+  --color-focus: var(--mint-300);
+  --button-primary-bg: var(--gradient-brand); /* the app's primary button */
+  --button-primary-bg-hover: var(--mint-200);
+  --button-primary-text: var(--n-950);
+  --bar-track: var(--n-700);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --reveal-distance: 0px;
+    --press-scale: 1;
+    --dur-reveal: 200ms;
+  }
+}
